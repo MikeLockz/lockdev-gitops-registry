@@ -5,7 +5,7 @@ on:
   push:
     paths:
       - 'Dockerfile.test'
-      - '.github/workflows/test-registry.yml'
+      - '.github/workflows/build-push.yml'
 
 jobs:
   build-and-push:
