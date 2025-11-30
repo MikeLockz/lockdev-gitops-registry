@@ -21,10 +21,17 @@ jobs:
           username: ${{ secrets.HARBOR_USERNAME }}
           password: ${{ secrets.HARBOR_PASSWORD }}
 
+      - name: Extract Registry Host
+        id: registry_host
+        run: |
+          URL="${{ secrets.HARBOR_URL }}"
+          HOST=${URL#*//}
+          echo "host=$HOST" >> $GITHUB_OUTPUT
+
       - name: Build and Push
         uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile.test
           push: true
-          tags: ${{ secrets.HARBOR_URL }}/gitops/test-image:latest
+          tags: ${{ steps.registry_host.outputs.host }}/gitops/test-image:latest
