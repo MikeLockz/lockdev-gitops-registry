@@ -9,8 +9,8 @@ restart = "unless-stopped"
 ports = ["8080:8080"]
 environment = [
   "NODE_ENV=production",
-  "OTEL_SERVICE_NAME=edge-nginx"
-  # Add other env vars as needed
+  "OTEL_SERVICE_NAME=edge-nginx",
+  "OTEL_EXPORTER_OTLP_ENDPOINT=http://192.168.1.40:4318/v1/traces"
 ]
 depends_on = ["server"]
 
@@ -21,8 +21,8 @@ restart = "unless-stopped"
 ports = ["3001:3000"]
 environment = [
   "NODE_ENV=production",
-  "OTEL_SERVICE_NAME=node-backend"
-  # Add other env vars as needed
+  "OTEL_SERVICE_NAME=node-backend",
+  "OTEL_EXPORTER_OTLP_ENDPOINT=http://192.168.1.40:4318/v1/traces"
 ]
 depends_on = ["postgres", "redis"]
 
