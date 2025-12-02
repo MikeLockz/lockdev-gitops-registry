@@ -1,0 +1,43 @@
+[stack]
+name = "el-dorado"
+host = "app-stack"
+
+[service.web]
+image = "harbor.internal/el-dorado/web"
+tag = "latest"
+restart = "unless-stopped"
+ports = ["8080:8080"]
+environment = [
+  "NODE_ENV=production",
+  "OTEL_SERVICE_NAME=edge-nginx"
+  # Add other env vars as needed
+]
+depends_on = ["server"]
+
+[service.server]
+image = "harbor.internal/el-dorado/server"
+tag = "latest"
+restart = "unless-stopped"
+ports = ["3001:3000"]
+environment = [
+  "NODE_ENV=production",
+  "OTEL_SERVICE_NAME=node-backend"
+  # Add other env vars as needed
+]
+depends_on = ["postgres", "redis"]
+
+[service.postgres]
+image = "postgres:18-alpine"
+restart = "unless-stopped"
+volumes = ["postgres_data:/var/lib/postgresql/data"]
+environment = [
+  "POSTGRES_DB=el_dorado",
+  "POSTGRES_USER=postgres"
+  # POSTGRES_PASSWORD should be injected via secrets in Komodo
+]
+
+[service.redis]
+image = "redis:7-alpine"
+restart = "unless-stopped"
+volumes = ["redis_data:/data"]
+command = "redis-server --appendonly yes"
