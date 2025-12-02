@@ -8,8 +8,8 @@ restart = "unless-stopped"
 ports = ["3000:3000"]
 volumes = [
   "grafana_data:/var/lib/grafana",
-  "./config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources",
-  "./config/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards"
+  "./observability-config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources",
+  "./observability-config/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards"
 ]
 
 [service.loki]
@@ -17,7 +17,7 @@ image = "grafana/loki:latest"
 restart = "unless-stopped"
 ports = ["3100:3100"]
 volumes = [
-  "./config/loki-config.yml:/etc/loki/local-config.yaml",
+  "./observability-config/loki-config.yml:/etc/loki/local-config.yaml",
   "loki_data:/loki"
 ]
 command = "-config.file=/etc/loki/local-config.yaml -server.http-listen-address=loki"
@@ -27,7 +27,7 @@ image = "prom/prometheus:latest"
 restart = "unless-stopped"
 ports = ["9090:9090"]
 volumes = [
-  "./config/prometheus.yml:/etc/prometheus/prometheus.yml",
+  "./observability-config/prometheus.yml:/etc/prometheus/prometheus.yml",
   "prometheus_data:/prometheus"
 ]
 command = "--config.file=/etc/prometheus/prometheus.yml"
@@ -38,7 +38,7 @@ image = "grafana/tempo:latest"
 restart = "unless-stopped"
 ports = ["3200:3200"]
 volumes = [
-  "./config/tempo-config.yml:/etc/tempo.yml",
+  "./observability-config/tempo-config.yml:/etc/tempo.yml",
   "tempo_data:/tmp/tempo"
 ]
 command = "-config.file=/etc/tempo.yml"
@@ -52,5 +52,5 @@ ports = [
   "8889:8889"
 ]
 volumes = [
-  "./config/otel-collector.yml:/etc/otelcol-contrib/config.yaml"
+  "./observability-config/otel-collector.yml:/etc/otelcol-contrib/config.yaml"
 ]
