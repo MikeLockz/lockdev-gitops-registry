@@ -1,0 +1,56 @@
+[stack]
+name = "observability"
+host = "observability-stack"
+
+[service.grafana]
+image = "grafana/grafana:latest"
+restart = "unless-stopped"
+ports = ["3000:3000"]
+volumes = [
+  "grafana_data:/var/lib/grafana",
+  "./config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources",
+  "./config/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards"
+]
+
+[service.loki]
+image = "grafana/loki:latest"
+restart = "unless-stopped"
+ports = ["3100:3100"]
+volumes = [
+  "./config/loki-config.yml:/etc/loki/local-config.yaml",
+  "loki_data:/loki"
+]
+command = "-config.file=/etc/loki/local-config.yaml -server.http-listen-address=loki"
+
+[service.prometheus]
+image = "prom/prometheus:latest"
+restart = "unless-stopped"
+ports = ["9090:9090"]
+volumes = [
+  "./config/prometheus.yml:/etc/prometheus/prometheus.yml",
+  "prometheus_data:/prometheus"
+]
+command = "--config.file=/etc/prometheus/prometheus.yml"
+# env_file is not supported directly, use explicit environment vars if needed
+
+[service.tempo]
+image = "grafana/tempo:latest"
+restart = "unless-stopped"
+ports = ["3200:3200"]
+volumes = [
+  "./config/tempo-config.yml:/etc/tempo.yml",
+  "tempo_data:/tmp/tempo"
+]
+command = "-config.file=/etc/tempo.yml"
+
+[service.otel-collector]
+image = "otel/opentelemetry-collector-contrib:latest"
+restart = "unless-stopped"
+ports = [
+  "4317:4317",
+  "4318:4318",
+  "8889:8889"
+]
+volumes = [
+  "./config/otel-collector.yml:/etc/otelcol-contrib/config.yaml"
+]
