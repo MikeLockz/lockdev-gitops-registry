@@ -1,0 +1,73 @@
+services:
+  coolify:
+    image: ghcr.io/coollabsio/coolify:latest
+    container_name: coolify
+    restart: always
+    working_dir: /var/www/html
+    volumes:
+      - type: bind
+        source: .
+        target: /data/coolify
+        read_only: false
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - APP_ID
+      - APP_KEY
+      - DB_PASSWORD
+      - REDIS_PASSWORD
+      - APP_ENV=production
+      - APP_URL
+      - APP_PORT=8000
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    depends_on:
+      - postgres
+      - redis
+      - soketi
+    networks:
+      - coolify
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: coolify-db
+    restart: always
+    environment:
+      - POSTGRES_USER=coolify
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=coolify
+    volumes:
+      - coolify-db-data:/var/lib/postgresql/data
+    networks:
+      - coolify
+
+  redis:
+    image: redis:7-alpine
+    container_name: coolify-redis
+    restart: always
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - coolify-redis-data:/data
+    networks:
+      - coolify
+
+  soketi:
+    image: ghcr.io/coollabsio/coolify-realtime:latest
+    container_name: coolify-realtime
+    restart: always
+    environment:
+      - APP_ID
+      - APP_KEY
+      - DB_REDIS_HOST=redis
+      - DB_REDIS_PORT=6379
+      - DB_REDIS_PASSWORD=${REDIS_PASSWORD}
+    networks:
+      - coolify
+
+networks:
+  coolify:
+    name: coolify
+    driver: bridge
+
+volumes:
+  coolify-db-data:
+  coolify-redis-data:
