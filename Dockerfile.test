@@ -1,3 +1,0 @@
-FROM alpine:latest
-RUN echo "Hello from LockDev GitOps Registry! (v2)" > /hello.txt
-CMD ["cat", "/hello.txt"]
