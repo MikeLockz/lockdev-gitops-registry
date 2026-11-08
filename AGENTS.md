@@ -1,0 +1,5 @@
+# LockDev GitOps and registry agent guide
+
+This repository contains GitOps controller and registry documentation and related configuration for Proxmox LXC 901 (`docker-gitops-registry`, `192.168.1.42`). Branches differ: local unpublished work may contain Coolify migration files that are not on remote `main`. The live LXC runs Coolify, Komodo components, and a Harbor log container; versioned Compose definitions for these services are in `lockdev-infra/guests/lxc-901-gitops-registry/`. Read the [cross-service agent context](https://github.com/MikeLockz/lockdev-docs/blob/trunk/docs/tech/agent-context.md) (local checkout: `~/Development/lockdev-docs/docs/tech/agent-context.md`) for the host map and dependencies.
+
+Proxmox guest, backup, and storage changes belong to `lockdev-infra`; DNS changes belong to `lockdev-infra/cloudflare/`. Read this repo's README and inspect live state and `git status` before editing. The local branch may contain unpublished commits; preserve them. Validate affected services and routes after a scoped change; never commit credentials.
