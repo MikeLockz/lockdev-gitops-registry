@@ -1,5 +1,10 @@
 # LockDev GitOps Registry & Controller
 
+**Current status — November 21, 2026:** LXC 901 is stopped with automatic start disabled.
+The material below describes retained historical workloads, not running services.
+Versioned guest Compose definitions are maintained in `lockdev-infra/guests/lxc-901-gitops-registry/`.
+The older unpublished Coolify migration is preserved on `archive/coolify-local-2025`; it has not been activated.
+
 This repository contains the configuration and documentation for the **GitOps Registry** (Harbor) and **GitOps Controller** (Komodo) infrastructure.
 
 ## 🚀 Services
